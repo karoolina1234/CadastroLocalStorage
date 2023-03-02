@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import * as S from './Cadastro.style'
+import AlertItem from '../alert/Alert';
 
 const Cadastro = (item) => {
     const [marca, setMarca] = useState();
@@ -11,6 +12,7 @@ const Cadastro = (item) => {
     const [placa, setPlaca] = useState();
     const [files, setFiles] = useState([]);
     const [estado, setEstado] = useState('excelente')
+    const [add, setAdd] = useState(false);
 
     const { getInputProps } = useDropzone({
         accept: {
@@ -39,6 +41,7 @@ const Cadastro = (item) => {
             products.push(product);
 
             localStorage.setItem("items_dados", JSON.stringify(products))
+            setAdd(true)
             clearData();
         } else {
             var arrayLocal = localStorage.getItem("items_dados");
@@ -81,6 +84,14 @@ const Cadastro = (item) => {
             setEstado(item.item.item.estado)
         }
     }, [])
+
+    useEffect(()=>{
+        if(add){
+            setTimeout(() => {
+                setAdd(false)
+              }, 1000)
+        }
+    },[add])
 
     return (
         <S.Content data-testid='cadastroPage'>
@@ -130,6 +141,8 @@ const Cadastro = (item) => {
                     (<Button onClick={addItem}>Editar</Button>)
                     :
                     (<Button onClick={addItem}>Adicionar</Button>)}
+
+                    {add && <AlertItem/>}
             </Form>
         </S.Content>
 
